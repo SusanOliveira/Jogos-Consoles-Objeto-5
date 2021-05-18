@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 public class MeuCanvas extends JPanel implements ActionListener{
 
 	ParticulaCirculo particula[];
+	QuadTree quadtree;
 	public MeuCanvas(int quantidadeDeParticulas)
 	{
 		particula = new ParticulaCirculo[quantidadeDeParticulas];
@@ -19,6 +20,10 @@ public class MeuCanvas extends JPanel implements ActionListener{
 	{
 		 particula = particulas;
 		 
+	}
+	public void EnvioDaQuadTree(QuadTree valor)
+	{
+		quadtree = valor;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -31,8 +36,12 @@ public class MeuCanvas extends JPanel implements ActionListener{
 		// TODO Auto-generated method stub
 		super.paintComponent(g);
 		this.setBackground(new Color(255,255,255));
+		if(MainClass.quadTreeBoolean==false)
+		g.drawRect(0, 0, MainClass.tamanhoX, MainClass.tamanhoY);
+		if(quadtree!=null)
+		quadtree.paint(g);
 		
-		if(particula!=null)
+		if(particula[0]!=null)
 		{
 			for (int i = 0; i < particula.length; i++) {
 				particula[i].paint(g);
