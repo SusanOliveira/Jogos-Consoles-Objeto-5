@@ -11,6 +11,7 @@ import javax.swing.Timer;
 
 public class MainClass extends JFrame implements ActionListener{
 	
+	static boolean quadTreeBoolean = false;
 	int quantidade = 800;
 	Timer tempo = new Timer(10,this);
 	static int tamanhoX = 600,tamanhoY = 600;
@@ -22,6 +23,8 @@ public class MainClass extends JFrame implements ActionListener{
 	MeuCanvas canvas = new MeuCanvas(quantidade);
 	boolean podeIniciar = false;
 	ArrayList<ParticulaCirculo> particulas;
+	QuadTree quadtree;
+	Retangulo retangulo;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -32,8 +35,8 @@ public class MainClass extends JFrame implements ActionListener{
 	{
 		tempo.start();
 		rand = new Random();
-//		tamanhoX = 400;
-//		tamanhoY = 400;
+	//	tamanhoX = 400;
+	//	tamanhoY = 400;
 		setLayout (new BorderLayout ());
 		setSize(tamanhoX, tamanhoY);
 		setTitle("Meu canvas teste");
@@ -43,40 +46,71 @@ public class MainClass extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 		
 		setVisible(true);
-
+	
 		particulas = new ArrayList<ParticulaCirculo>();
 	    particula = new ParticulaCirculo[quantidade];
 	    irmaos = new ParticulaCirculo[particula.length];
+		retangulo = new Retangulo(0, 0, tamanhoX, tamanhoY);
 		
 	    
 	    for (int i = 0; i < particula.length; i++) {
 			particula[i] = new ParticulaCirculo(rand.nextInt(tamanhoX), rand.nextInt(tamanhoY), tamanhoCirculo, tamanhoX,tamanhoY);
 			irmaos[i] = particula[i];
 			particulas.add(particula[i]);
+			//quadtree.InserirNoArray(particula[i]);
 	    }
 	    
-    	for (int i = 0; i < particula.length; i++) {
+	    if(quadTreeBoolean==false)
+	    {
+	    	for (int i = 0; i < particula.length; i++) {
+				for (int j = 0; j < particula.length; j++) {
+					if(i==j)
+					{
+						
+					}
+					else
+					{
+						irmaos[i].AdicionarIrmaos(particula[j]); 
+					}
+				}
 		
-    		for (int j = 0; j < particula.length; j++) {
-    			if(i==j) {}	else {
-    				irmaos[i].AdicionarIrmaos(particula[j]); 
-    			}
-    		}
-		
-    	}
-
+	    	}
+	    }
+	    else
+	    {
+	    
+	    	quadtree = new QuadTree(retangulo, 4);
+	    	quadtree.InserirNoArray(particulas);
+	    	canvas.EnvioDaQuadTree(quadtree);
+	    	//System.out.println(particulas.size());
+	    }
+	
 	    canvas.EnvioDeParticulas(particula);
 	  
 	    
-
+	
 	    podeIniciar = true;
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		segundos+=0.1;
 		//System.out.println((int)segundos);
-
+		if(quadTreeBoolean && quadtree!=null)
+		{
+		quadtree = new QuadTree(retangulo, 4);
+		quadtree.InserirNoArray(particulas);
+		canvas.EnvioDaQuadTree(quadtree);
+		
+		quadtree.ColisaoQuadTree();
+			
+		}
+		
+		
+		
+		
+		
+		
 		if(podeIniciar)
 		{
 		    for (int i = 0; i < particula.length; i++) {
@@ -90,9 +124,6 @@ public class MainClass extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		
 	}
-
-
-	 
 	
 
 }
