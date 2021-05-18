@@ -64,6 +64,13 @@ public class ParticulaCirculo extends Canvas{
 				}
 
 			}
+
+		}
+		if(!MainClass.checagemUmCicloColisao)
+		{
+			MainClass.checagemUmCicloColisao = true;
+			MainClass.tempoGastoNaColisaoAtual = System.nanoTime();//MainClass.start2Inicio
+			System.out.println("tempo gasto pra fazer a colsao -> " + ((MainClass.tempoGastoNaColisaoAtual - MainClass.start2Inicio)/1000000000));
 		}
 
 	//	System.out.print("colidiu");
@@ -71,13 +78,16 @@ public class ParticulaCirculo extends Canvas{
 	
 	public void AdicionarIrmaos(ParticulaCirculo irmaos)
 	{
-		//this.irmaos = irmaos;
+		
 		this.irmaos.add(irmaos);
 	}
 
 	public void andar(double segundos)
 	{
-		
+		if(MainClass.quadTreeBoolean==false)
+		{
+			Colisao();
+		}
 		if(this.x>=tamanhoX-radio )
 		{
 			
